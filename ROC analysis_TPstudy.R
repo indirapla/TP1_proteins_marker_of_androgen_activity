@@ -2,7 +2,7 @@
 
 #   Paper: Novel potentially clinically valuable protein markers of androgen activity in humans 
 # Authors: Aleksander Giwercman1*, K Barbara Sahlin*, Indira Pla, Krzysztof Pawlowski, Carl Fehniger, 
-#          Yvonne Lundberg Giwercman, Irene Leijonhufvud, Roger Appelqvist, György Marko-Varga, 
+#          Yvonne Lundberg Giwercman, Irene Leijonhufvud, Roger Appelqvist, GyÃ¶rgy Marko-Varga, 
 #          Aniel Sanchez???, and Johan Malm???
 
 #====INSTALL PACKAGES=====
@@ -29,15 +29,15 @@ lapply(.packages, require, character.only=TRUE)
 #       matrix: dataframe containing variables as columns and samples (observation) as rows.
 #     from.col: number of the column that contains the first variable to plot as ROC curve. 
 #       to.col: number of the column that contains the last variable to plot as ROC curve.
-#    group.col: number of the column that contains the dichotomic variable.
+#    group.col: number of the column that contains the dichotomic variable. (characters are not allowed)
 #        plots: should the plots be generated? (True or False)
 
 plot_roc.fn <- function(matrix,from.col,to.col, group.col, plots=F){
   
   colnames1 <- as.character(colnames(matrix))
-  AUC.matrix <- matrix(nrow=ncol(matrix),ncol = 3)
+  AUC.matrix <- matrix(nrow=ncol(matrix),ncol = 6)
   
-  colnames(AUC.matrix) <- c("AUC.CI","LL (95% CI)","UL (95% CI)")
+  colnames(AUC.matrix) <- c("AUC.CI","LL (95% CI)","UL (95% CI)","p-value","Sp","Se")
   
   for(i in from.col:to.col) {
     #hist(matrix[,i], main=colnames(matrix)[i])
@@ -93,6 +93,14 @@ plot_roc.fn <- function(matrix,from.col,to.col, group.col, plots=F){
     # AUC.vector <- c(paste("auc = ",round(roc_i$auc,3), sep = ""),
     #                 paste("LL(95% CI) = ",round(ci.auc1[1],3), sep = ""),
     #                 paste("UP(95% CI) = ",round(ci.auc1[3],3), sep = ""))
+    
+        ROC_table <- cbind(roc_i$thresholds, roc_i$specificities, roc_i$sensitivities)
+    cut_off <- ROC_table[which.max(ROC_table[, 2] + ROC_table[, 3]), ] 
+    
+    roc.A <- verification::roc.area(roc_i$original.response,roc_i$original.predictor)
+    AUC.matrix[i,4] <- roc.A$p.value  ## p.value
+    AUC.matrix[i,5] <- cut_off[2]     ## Sp
+    AUC.matrix[i,6] <- cut_off[3]     ## Se
     
     roc_i.newlist <- list(AUC = as.matrix(roc_i$auc),
                           sens.= as.matrix(roc_i$sensitivities),
