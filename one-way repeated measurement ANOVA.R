@@ -2,8 +2,8 @@
 
 #   Paper: Novel potentially clinically valuable protein markers of androgen activity in humans 
 # Authors: Aleksander Giwercman1*, K Barbara Sahlin*, Indira Pla, Krzysztof Pawlowski, Carl Fehniger, 
-#          Yvonne Lundberg Giwercman, Irene Leijonhufvud, Roger Appelqvist, György Marko-Varga, 
-#          Aniel Sanchez†, and Johan Malm†
+#          Yvonne Lundberg Giwercman, Irene Leijonhufvud, Roger Appelqvist, GyÃ¶rgy Marko-Varga, 
+#          Aniel Sanchezâ€ , and Johan Malmâ€ 
 
 
 
@@ -13,11 +13,11 @@
 .packages = c("devtools","ggplot2", "reshape2", 
               "tidyverse","dplyr","ez")
 
-# Instala los paquetes sinó los tienes instalados
+# Install packages if not installed
 .inst <- .packages %in% installed.packages()
 if(length(.packages[!.inst]) > 0) {install.packages(.packages[!.inst])}
 
-# Carga los paquetes sinó los tienes cargados
+# Loading packages
 lapply(.packages, require, character.only=TRUE)
 
 
