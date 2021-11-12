@@ -19,3 +19,7 @@ A stepwise regression (method: backward) to select the best combination of marke
 #### File: ROC analysis_TPstudy_infertile cohort.R
 
 ROC analysis to discriminate patients with MetS, IR, CVRLP, DM or LBD within the cohort infertile men, using the expression level of the candidate biomarkers and Testosterone hormone.
+
+#### File: DeLong's test to compare the AUCs
+
+Based on the ROC curves, the DeLong's test (paired) was applied in R (roc.test {pROC} function) to compare the AUCs of the candidate biomarkers vs the AUC of Testosterone levels to discriminate the above mentioned pathological conditions. 
