@@ -15,3 +15,7 @@ Receiver operating characteristic (ROC) analysis to select proteins capable to d
 #### File: TP_stepwise.R
 
 A stepwise regression (method: backward) to select the best combination of markers that predict the odds of being low Testosterone. Bootstrap resampling with replacement method was applied to assess consistency of predictors selected with the stepwise regression.
+
+#### File: ROC analysis_TPstudy_infertile cohort.R
+
+ROC analysis to discriminate patients with MetS, IR, CVRLP, DM or LBD within the cohort infertile men using the expression level of the candidate biomarkers and Testosterone hormone
