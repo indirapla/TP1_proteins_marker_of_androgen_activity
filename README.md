@@ -2,7 +2,7 @@
 
 This repository contains R code used to perform the data analysis descrived in the manuscript:
  
-### Novel potentially clinically valuable protein markers of androgen activity in humans 
+### Novel protein markers of androgen activity in humans: proteomic study of plasma from young chemically castrated men. 
 
 #### File: one-way repeated measurement ANOVA.R:
 
