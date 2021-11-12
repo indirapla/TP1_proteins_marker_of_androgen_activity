@@ -18,4 +18,4 @@ A stepwise regression (method: backward) to select the best combination of marke
 
 #### File: ROC analysis_TPstudy_infertile cohort.R
 
-ROC analysis to discriminate patients with MetS, IR, CVRLP, DM or LBD within the cohort infertile men using the expression level of the candidate biomarkers and Testosterone hormone
+ROC analysis to discriminate patients with MetS, IR, CVRLP, DM or LBD within the cohort infertile men, using the expression level of the candidate biomarkers and Testosterone hormone.
