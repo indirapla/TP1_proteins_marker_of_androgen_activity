@@ -1,8 +1,8 @@
 #========01 TP STUDY(proteomics-infertile cohort) =============
 
-#   Paper: Novel potentially clinically valuable protein markers of androgen activity in humans 
+#   Paper: Novel protein markers of androgen activity in humans: proteomic study of plasma from young chemically castrated men.
 # Authors: Aleksander Giwercman1*, K Barbara Sahlin*, Indira Pla, Krzysztof Pawlowski, Carl Fehniger, 
-#          Yvonne Lundberg Giwercman, Irene Leijonhufvud, Roger Appelqvist, György Marko-Varga, 
+#          Yvonne Lundberg Giwercman, Irene Leijonhufvud, Roger Appelqvist, GyÃ¶rgy Marko-Varga, 
 #          Aniel Sanchez???, and Johan Malm???
 
 
