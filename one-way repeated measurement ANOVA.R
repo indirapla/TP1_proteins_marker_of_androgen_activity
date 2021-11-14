@@ -40,12 +40,12 @@ ANOVA_paired <- function(m, groups, n.gr){
   k = 2  # binary comparison
   comb <- factorial(n.gr)/(factorial(k)*factorial(n.gr-k))  # number of combinations
   
-  p.value <- matrix(nrow=nrow(main_table),ncol = 2)
+  p.value <- matrix(nrow=nrow(m),ncol = 2)
   protein.name <- vector(mode = "character")
-  mean.new <- matrix(nrow=nrow(main_table),ncol = comb)
-  Fold.change <- matrix(nrow=nrow(main_table),ncol = comb)
-  t.test.posthoc <- matrix(nrow=nrow(main_table),ncol = comb+1)
-  t.test.posthoc.adj <- matrix(nrow=nrow(main_table),ncol = comb+1)
+  mean.new <- matrix(nrow=nrow(m),ncol = comb)
+  Fold.change <- matrix(nrow=nrow(m),ncol = comb)
+  t.test.posthoc <- matrix(nrow=nrow(m),ncol = comb+1)
+  t.test.posthoc.adj <- matrix(nrow=nrow(m),ncol = comb+1)
   num.samples <- vector(mode = "numeric")
   
   
