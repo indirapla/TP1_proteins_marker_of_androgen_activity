@@ -140,7 +140,7 @@ plot_roc.fn <- function(matrix,from.col,to.col, group.col, files.ID,plots=F){
      
      DATA.1 <- plyr::join_all(list(DATA,MMA),by="Kod")
      
-     Low.test <- DATA.1[, c("Low.testo", "HPPD","ALDOB","IGFBP6","MMA")]
+     Low.test <- DATA.1[, c("Low.testo", "HPPD","ALDOB","IGFBP6","MMA","Total_testosterone")]
       
      plot_roc.fn(Low.test,from.col = 2, to.col = ncol(Low.test),group.col = "Low.testo",files.ID="Low.T_",plots = F)
       
@@ -179,7 +179,7 @@ plot_roc.fn <- function(matrix,from.col,to.col, group.col, files.ID,plots=F){
    
    DATA.1 <- plyr::join_all(list(DATA,MMA),by="Kod")
    
-   Low.test2 <- DATA.1[, c("LT_nBLin", "HPPD","ALDOB","IGFBP6","MMA")]
+   Low.test2 <- DATA.1[, c("LT_nBLin", "HPPD","ALDOB","IGFBP6","MMA","Total_testosterone")]
    
    plot_roc.fn(Low.test2,from.col = 2, to.col = ncol(Low.test2),group.col = "LT_nBLin",files.ID="Low.T2_LT_B_")
    
@@ -218,7 +218,7 @@ plot_roc.fn <- function(matrix,from.col,to.col, group.col, files.ID,plots=F){
    
    DATA.1 <- plyr::join_all(list(DATA,MMA),by="Kod")
    
-   LcFT.test <- DATA.1[, c("LcFT", "HPPD","ALDOB","IGFBP6","MMA")]
+   LcFT.test <- DATA.1[, c("LcFT", "HPPD","ALDOB","IGFBP6","MMA","Total_testosterone")]
    
    plot_roc.fn(LcFT.test,from.col = 2, to.col = ncol(LcFT.test),group.col = "LcFT",files.ID="Low.cFT_")
    
