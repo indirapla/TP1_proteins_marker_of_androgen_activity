@@ -158,6 +158,9 @@ plot_roc.fn <- function(matrix,from.col,to.col, group.col, files.ID,plots=F){
    #theme(legend.position = "none")   # to dont show the legend
    
   #comparing ROC curves
+   LT.model <- Low.test$Low.testo ~ HPPD+ALDOB+IGFBP6+MMA+Total_testosterone
+   roc_i.list.LT <- roc(LT.model,percent=T, smooth=F, legacy.axes=F,ci=TRUE, data = Low.test)
+   roc_i.list.LT
    
    pROC::roc.test(roc_i.list.LT$HPPD,roc_i.list.LT$Total_testosterone, paired=T, method="delong") # HPPD vs Total Testosterone
    pROC::roc.test(roc_i.list.LT$IGFBP6,roc_i.list.LT$Total_testosterone, paired=T, method="delong") # IGFBP6 vs Total Testosterone
@@ -194,6 +197,9 @@ plot_roc.fn <- function(matrix,from.col,to.col, group.col, files.ID,plots=F){
    #theme(legend.position = "none")   # to dont show the legend
    
   #comparing ROC curves
+   LT.model2 <- Low.test2$LT_nBLin ~ HPPD+ALDOB+IGFBP6+MMA+Total_testosterone
+   roc_i.list.LT2 <- roc(LT.model2,percent=T, smooth=F, legacy.axes=F,ci=TRUE, data = Low.test2)
+   roc_i.list.LT2
    
    pROC::roc.test(roc_i.list.LT2$HPPD,roc_i.list.LT2$Total_testosterone, paired=T, method="delong") # HPPD vs Total Testosterone
    pROC::roc.test(roc_i.list.LT2$IGFBP6,roc_i.list.LT2$Total_testosterone, paired=T, method="delong") # IGFBP6 vs Total Testosterone
@@ -231,7 +237,10 @@ plot_roc.fn <- function(matrix,from.col,to.col, group.col, files.ID,plots=F){
    #theme(legend.position = "none")   # to dont show the legend
 
  #comparing ROC curves
-   
+   LcFT.model <- LcFT.test$LcFT ~ HPPD+ALDOB+IGFBP6+MMA+Total_testosterone
+   roc_i.list.LcFT <- roc(LcFT.model,percent=T, smooth=F, legacy.axes=F,ci=TRUE, data = LcFT.test)
+   roc_i.list.LcFT
+
    pROC::roc.test(roc_i.list.LcFT$HPPD,roc_i.list.LcFT$Total_testosterone, paired=T, method="delong") # HPPD vs Total Testosterone
    pROC::roc.test(roc_i.list.LcFT$IGFBP6,roc_i.list.LcFT$Total_testosterone, paired=T, method="delong") # IGFBP6 vs Total Testosterone
    pROC::roc.test(roc_i.list.LcFT$ALDOB,roc_i.list.LcFT$Total_testosterone, paired=T, method="delong") # ALDOB vs Total Testosterone
