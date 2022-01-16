@@ -159,11 +159,84 @@ plot_roc.fn <- function(matrix,from.col,to.col, group.col, files.ID,plots=F){
    
   #comparing ROC curves
    
-   pROC::roc.test(roc_i.list.LT$HPPD,roc_i.list.LT$Total_testosterone, paired=T, method="delong") # HPPD vs Testosterone
-   pROC::roc.test(roc_i.list.LT$IGFBP6,roc_i.list.LT$Total_testosterone, paired=T, method="delong") # IGFBP6 vs Testosterone
-   pROC::roc.test(roc_i.list.LT$ALDOB,roc_i.list.LT$Total_testosterone, paired=T, method="delong") # ALDOB vs Testosterone
-   pROC::roc.test(roc_i.list.LT$MMA,roc_i.list.LT$Total_testosterone, paired=T, method="delong") # MMA vs Testosterone
+   pROC::roc.test(roc_i.list.LT$HPPD,roc_i.list.LT$Total_testosterone, paired=T, method="delong") # HPPD vs Total Testosterone
+   pROC::roc.test(roc_i.list.LT$IGFBP6,roc_i.list.LT$Total_testosterone, paired=T, method="delong") # IGFBP6 vs Total Testosterone
+   pROC::roc.test(roc_i.list.LT$ALDOB,roc_i.list.LT$Total_testosterone, paired=T, method="delong") # ALDOB vs Total Testosterone
+   pROC::roc.test(roc_i.list.LT$MMA,roc_i.list.LT$Total_testosterone, paired=T, method="delong") # MMA vs Total Testosterone
    
+#== Low testosterone 2---by --Total testosterone (excluding borderline low testosterone) ==========
+   
+   #== To build the MMA (model1) variable ===
+   
+   glm.ht = glm(LT_nBLin ~ HPPD + IGFBP6, data = DATA, family="binomial")
+   
+   MMA <- as.data.frame(predict(glm.ht, type = "response"))   # save the predicted log-odds (of being low testosterone) for each observation
+   colnames(MMA) <- "MMA"
+   MMA$Kod <- row.names(MMA)
+   
+   DATA.1 <- plyr::join_all(list(DATA,MMA),by="Kod")
+   
+   Low.test2 <- DATA.1[, c("LT_nBLin", "HPPD","ALDOB","IGFBP6","MMA")]
+   
+   plot_roc.fn(Low.test2,from.col = 2, to.col = ncol(Low.test2),group.col = "LT_nBLin",files.ID="Low.T2_LT_B_")
+   
+   LT.model2 <- Low.test2$LT_nBLin ~ HPPD+ALDOB+IGFBP6+MMA
+   roc_i.list.LT2 <- roc(LT.model2,percent=T, smooth=F, legacy.axes=F,ci=TRUE, data = Low.test2)
+   roc_i.list.LT2
+   
+   # Graph Multicurve
+   gg.LT<- ggroc(roc_i.list.LT2, linetype=1,size = 0.75)+
+     theme_bw()+labs()+ggtitle("Low testosterone (LT_B)")+
+     theme(legend.title = element_blank())+
+     geom_segment(aes(x = 100, xend = 0, y = 0, yend = 100), color="black", linetype="dashed",size = 0.5)
+   gg.LT
+   
+   #theme(legend.position = "none")   # to dont show the legend
+   
+  #comparing ROC curves
+   
+   pROC::roc.test(roc_i.list.LT2$HPPD,roc_i.list.LT2$Total_testosterone, paired=T, method="delong") # HPPD vs Total Testosterone
+   pROC::roc.test(roc_i.list.LT2$IGFBP6,roc_i.list.LT2$Total_testosterone, paired=T, method="delong") # IGFBP6 vs Total Testosterone
+   pROC::roc.test(roc_i.list.LT2$ALDOB,roc_i.list.LT2$Total_testosterone, paired=T, method="delong") # ALDOB vs Total Testosterone
+   pROC::roc.test(roc_i.list.LT2$MMA,roc_i.list.LT2$Total_testosterone, paired=T, method="delong") # MMA vs Total Testosterone
+
+#== Low calculated Free testosterone---==========
+   
+   #== To build the MMA (model1) variable ===
+   
+   glm.ht = glm(LcFT ~ HPPD + IGFBP6, data = DATA, family="binomial")
+   
+   MMA <- as.data.frame(predict(glm.ht, type = "response"))   # save the predicted log-odds (of being low testosterone) for each observation
+   colnames(MMA) <- "MMA"
+   MMA$Kod <- row.names(MMA)
+   
+   DATA.1 <- plyr::join_all(list(DATA,MMA),by="Kod")
+   
+   LcFT.test <- DATA.1[, c("LcFT", "HPPD","ALDOB","IGFBP6","MMA")]
+   
+   plot_roc.fn(LcFT.test,from.col = 2, to.col = ncol(LcFT.test),group.col = "LcFT",files.ID="Low.cFT_")
+   
+
+   LcFT.model <- LcFT.test$LcFT ~ HPPD+ALDOB+IGFBP6+MMA
+   roc_i.list.LcFT <- roc(LcFT.model,percent=T, smooth=F, legacy.axes=F,ci=TRUE, data = LcFT.test)
+   roc_i.list.LcFT
+   
+   # Graph Multicurve
+   gg.LT<- ggroc(roc_i.list.LcFT, linetype=1,size = 0.75)+
+     theme_bw()+labs()+ggtitle("Low calc.Free testosterone")+
+     theme(legend.title = element_blank())+
+     geom_segment(aes(x = 100, xend = 0, y = 0, yend = 100), color="black", linetype="dashed",size = 0.5)
+   gg.LT
+   
+   #theme(legend.position = "none")   # to dont show the legend
+
+ #comparing ROC curves
+   
+   pROC::roc.test(roc_i.list.LcFT$HPPD,roc_i.list.LcFT$Total_testosterone, paired=T, method="delong") # HPPD vs Total Testosterone
+   pROC::roc.test(roc_i.list.LcFT$IGFBP6,roc_i.list.LcFT$Total_testosterone, paired=T, method="delong") # IGFBP6 vs Total Testosterone
+   pROC::roc.test(roc_i.list.LcFT$ALDOB,roc_i.list.LcFT$Total_testosterone, paired=T, method="delong") # ALDOB vs Total Testosterone
+   pROC::roc.test(roc_i.list.LcFT$MMA,roc_i.list.LcFT$Total_testosterone, paired=T, method="delong") # MMA vs Total Testosterone
+
 #== HOMA --by --Insuline resistance=========================
 
     #== To build the MMA (model1) variable ===
@@ -192,10 +265,10 @@ plot_roc.fn <- function(matrix,from.col,to.col, group.col, files.ID,plots=F){
     
   #comparing ROC curves
     
-    pROC::roc.test(roc_i.list.HOMA$HPPD,roc_i.list.HOMA$Total_testosterone, paired=T, method="delong") # HPPD vs Testosterone
-    pROC::roc.test(roc_i.list.HOMA$IGFBP6,roc_i.list.HOMA$Total_testosterone, paired=T, method="delong") # IGFBP6 vs Testosterone
-    pROC::roc.test(roc_i.list.HOMA$ALDOB,roc_i.list.HOMA$Total_testosterone, paired=T, method="delong") # ALDOB vs Testosterone
-    pROC::roc.test(roc_i.list.HOMA$MMA,roc_i.list.HOMA$Total_testosterone, paired=T, method="delong") # MMA vs Testosterone
+    pROC::roc.test(roc_i.list.HOMA$HPPD,roc_i.list.HOMA$Total_testosterone, paired=T, method="delong") # HPPD vs Total Testosterone
+    pROC::roc.test(roc_i.list.HOMA$IGFBP6,roc_i.list.HOMA$Total_testosterone, paired=T, method="delong") # IGFBP6 vs Total Testosterone
+    pROC::roc.test(roc_i.list.HOMA$ALDOB,roc_i.list.HOMA$Total_testosterone, paired=T, method="delong") # ALDOB vs Total Testosterone
+    pROC::roc.test(roc_i.list.HOMA$MMA,roc_i.list.HOMA$Total_testosterone, paired=T, method="delong") # MMA vs Total Testosterone
     
 #== Diabetes --==========================================================
     
@@ -227,10 +300,10 @@ plot_roc.fn <- function(matrix,from.col,to.col, group.col, files.ID,plots=F){
     
  #comparing ROC curves
     
-    pROC::roc.test(roc_i.list.DM$HPPD,roc_i.list.DM$Total_testosterone, paired=T, method="delong") # HPPD vs Testosterone
-    pROC::roc.test(roc_i.list.DM$IGFBP6,roc_i.list.DM$Total_testosterone, paired=T, method="delong") # IGFBP6 vs Testosterone
-    pROC::roc.test(roc_i.list.DM$ALDOB,roc_i.list.DM$Total_testosterone, paired=T, method="delong") # ALDOB vs Testosterone
-    pROC::roc.test(roc_i.list.DM$MMA,roc_i.list.DM$Total_testosterone, paired=T, method="delong") # MMA vs Testosterone
+    pROC::roc.test(roc_i.list.DM$HPPD,roc_i.list.DM$Total_testosterone, paired=T, method="delong") # HPPD vs Total Testosterone
+    pROC::roc.test(roc_i.list.DM$IGFBP6,roc_i.list.DM$Total_testosterone, paired=T, method="delong") # IGFBP6 vs Total Testosterone
+    pROC::roc.test(roc_i.list.DM$ALDOB,roc_i.list.DM$Total_testosterone, paired=T, method="delong") # ALDOB vs Total Testosterone
+    pROC::roc.test(roc_i.list.DM$MMA,roc_i.list.DM$Total_testosterone, paired=T, method="delong") # MMA vs Total Testosterone
     
 #== Cardivacular disease ---ratio ApoB/ApoA1 ===============
 
@@ -261,10 +334,10 @@ plot_roc.fn <- function(matrix,from.col,to.col, group.col, files.ID,plots=F){
 
   #comparing ROC curves
       
-      pROC::roc.test(roc_i.list.apo$HPPD,roc_i.list.apo$Total_testosterone, paired=T, method="delong") # HPPD vs Testosterone
-      pROC::roc.test(roc_i.list.apo$IGFBP6,roc_i.list.apo$Total_testosterone, paired=T, method="delong") # IGFBP6 vs Testosterone
-      pROC::roc.test(roc_i.list.apo$ALDOB,roc_i.list.apo$Total_testosterone, paired=T, method="delong") # ALDOB vs Testosterone
-      pROC::roc.test(roc_i.list.apo$MMA,roc_i.list.apo$Total_testosterone, paired=T, method="delong") # MMA vs Testosterone
+      pROC::roc.test(roc_i.list.apo$HPPD,roc_i.list.apo$Total_testosterone, paired=T, method="delong") # HPPD vs Total Testosterone
+      pROC::roc.test(roc_i.list.apo$IGFBP6,roc_i.list.apo$Total_testosterone, paired=T, method="delong") # IGFBP6 vs Total Testosterone
+      pROC::roc.test(roc_i.list.apo$ALDOB,roc_i.list.apo$Total_testosterone, paired=T, method="delong") # ALDOB vs Total Testosterone
+      pROC::roc.test(roc_i.list.apo$MMA,roc_i.list.apo$Total_testosterone, paired=T, method="delong") # MMA vs Total Testosterone
       
 #=== Metabolic Syndrome =====================================
 
@@ -294,10 +367,10 @@ plot_roc.fn <- function(matrix,from.col,to.col, group.col, files.ID,plots=F){
 
   #comparing ROC curves
       
-      pROC::roc.test(roc_i.list.Met.S$HPPD,roc_i.list.Met.S$Total_testosterone, paired=T, method="delong") # HPPD vs Testosterone
-      pROC::roc.test(roc_i.list.Met.S$IGFBP6,roc_i.list.Met.S$Total_testosterone, paired=T, method="delong") # IGFBP6 vs Testosterone
-      pROC::roc.test(roc_i.list.Met.S$ALDOB,roc_i.list.Met.S$Total_testosterone, paired=T, method="delong") # ALDOB vs Testosterone
-      pROC::roc.test(roc_i.list.Met.S$MMA,roc_i.list.Met.S$Total_testosterone, paired=T, method="delong") # MMA vs Testosterone
+      pROC::roc.test(roc_i.list.Met.S$HPPD,roc_i.list.Met.S$Total_testosterone, paired=T, method="delong") # HPPD vs Total Testosterone
+      pROC::roc.test(roc_i.list.Met.S$IGFBP6,roc_i.list.Met.S$Total_testosterone, paired=T, method="delong") # IGFBP6 vs Total Testosterone
+      pROC::roc.test(roc_i.list.Met.S$ALDOB,roc_i.list.Met.S$Total_testosterone, paired=T, method="delong") # ALDOB vs Total Testosterone
+      pROC::roc.test(roc_i.list.Met.S$MMA,roc_i.list.Met.S$Total_testosterone, paired=T, method="delong") # MMA vs Total Testosterone
       
 #=== Bone density-----by-------DEXA_lumbar_Z_score============
 
@@ -328,8 +401,8 @@ plot_roc.fn <- function(matrix,from.col,to.col, group.col, files.ID,plots=F){
       
   #comparing ROC curves
       
-      pROC::roc.test(roc_i.list.z.score$HPPD,roc_i.list.z.score$Total_testosterone, paired=T, method="delong") # HPPD vs Testosterone
-      pROC::roc.test(roc_i.list.z.score$IGFBP6,roc_i.list.z.score$Total_testosterone, paired=T, method="delong") # IGFBP6 vs Testosterone
-      pROC::roc.test(roc_i.list.z.score$ALDOB,roc_i.list.z.score$Total_testosterone, paired=T, method="delong") # ALDOB vs Testosterone
-      pROC::roc.test(roc_i.list.z.score$MMA,roc_i.list.z.score$Total_testosterone, paired=T, method="delong") # MMA vs Testosterone
+      pROC::roc.test(roc_i.list.z.score$HPPD,roc_i.list.z.score$Total_testosterone, paired=T, method="delong") # HPPD vs Total Testosterone
+      pROC::roc.test(roc_i.list.z.score$IGFBP6,roc_i.list.z.score$Total_testosterone, paired=T, method="delong") # IGFBP6 vs Total Testosterone
+      pROC::roc.test(roc_i.list.z.score$ALDOB,roc_i.list.z.score$Total_testosterone, paired=T, method="delong") # ALDOB vs Total Testosterone
+      pROC::roc.test(roc_i.list.z.score$MMA,roc_i.list.z.score$Total_testosterone, paired=T, method="delong") # MMA vs Total Testosterone
       
