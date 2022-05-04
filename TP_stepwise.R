@@ -3,8 +3,8 @@
 #   Paper: Novel protein markers of androgen activity in humans: proteomic study of plasma from young chemically castrated men.
 # Authors: Aleksander Giwercman1*, K Barbara Sahlin*, Indira Pla, Krzysztof Pawlowski, Carl Fehniger, 
 #          Yvonne Lundberg Giwercman, Irene Leijonhufvud, Roger Appelqvist, György Marko-Varga, 
-#          Aniel Sanchez???, and Johan Malm???
-
+#          Aniel Sanchez, and Johan Malm
+#
 
 #  Because the combination of different markers may improve the discriminative power 
 #  to diagnose hypogonadism and predict its long term sequelae, proteins selected from 
@@ -30,7 +30,7 @@ lapply(.packages, require, character.only=TRUE)
 
 #=====Loading dataset================================================================================== 
 # Download file "Healthy_model_Signif_biomarkers.xlsx" to your computer and read (upload) it from RStudio 
-# to do start doing the analysis.
+# to start doing the analysis.
 
 Big.table <- as.data.frame(readxl::read_excel("Healthy_model_Signif_biomarkers.xlsx")) # Read the file data
 rownames(Big.table) <- Big.table[,1]
