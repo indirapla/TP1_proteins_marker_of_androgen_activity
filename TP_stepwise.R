@@ -28,6 +28,15 @@ lapply(.packages, require, character.only=TRUE)
 
 #======END INSTALL PACKAGES====
 
+#=====Loading dataset================================================================================== 
+# Download file "Healthy_model_Signif_biomarkers.xlsx" to your computer and read (upload) it from RStudio 
+# to do start doing the analysis.
+
+Big.table <- as.data.frame(readxl::read_excel("Healthy_model_Signif_biomarkers.xlsx")) # Read the file data
+rownames(Big.table) <- Big.table[,1]
+Big.table <- dplyr::select(Big.table, -id)
+
+data1 <- dplyr::select(Big.table, -Patient)
 
 # Run Logistic Regression model with predictors. 
 
