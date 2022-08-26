@@ -51,10 +51,20 @@ ANOVA_paired <- function(m, groups, n.gr){
   
   
   for (i in 1:nrow(m)) {
-    data <- cbind(as.data.frame(t(m[i,])),groups)
+    
+    prot.data <- as.data.frame(t(m[i,]))
+    prot.data$sample <- rownames(prot.data)
+    
+    data <- plyr::join_all(list(prot.data,groups),by="sample")
+    row.names(data) <- data$sample
+
     prot.name <- colnames(data[1])
     
-    data1 <- cbind(subset(data,cond == "A"),subset(data,cond == "B"),subset(data,cond == "C"))
+    dataA <- subset(data,cond == "A")
+    dataB <- subset(data,cond == "B")
+    dataC <- subset(data,cond == "C")
+    
+    data1 <- plyr::join_all(list(dataA,dataB,dataC), by="Patients")
     
     data1.complete <- data1[complete.cases(data1),]
     
