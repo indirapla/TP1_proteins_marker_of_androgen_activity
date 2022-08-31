@@ -59,21 +59,26 @@ ANOVA_paired <- function(m, groups, n.gr){
     row.names(data) <- data$sample
 
     prot.name <- colnames(data[1])
+    data$cond <- as.factor(data$cond)
     
-    dataA <- subset(data,cond == "A")
-    dataB <- subset(data,cond == "B")
-    dataC <- subset(data,cond == "C")
+    dataA <- data[data$cond %in% levels(data$cond)[1],]
+    dataB <- data[data$cond %in% levels(data$cond)[2],]
+    dataC <- data[data$cond %in% levels(data$cond)[3],]
+
     
     data1 <- plyr::join_all(list(dataA,dataB,dataC), by="Patients")
     
     data1.complete <- data1[complete.cases(data1),]
     
     num.samples[i] <- nrow(data1.complete)
-    
-    data2 <- rbind(data1.complete[1:4],data1.complete[5:8],data1.complete[9:12])
+    rownames(data1.complete) <- data1.complete$Patients
+    Pat.ID <- data1.complete$Patients
+
+    data2 <- rbind(data1.complete[,c(1,2,4)],data1.complete[5:7],data1.complete[8:10])
+    data2$Patients <- rep(Pat.ID,length(levels(data$cond)))
     row.names(data2) <- data2$sample
     
-    colnames(data2) <- c("protein", colnames(data2[2:length(colnames(data2))]))
+    colnames(data2)[1] <- c("protein")
    
     ez= ezANOVA(data=data2, dv=protein, wid=Patient, within = cond)      #ez= ezANOVA(data=data, dv=P63104, wid=Patient, within = cond) #Anova 
     p.value[i,1] <- ez$ANOVA$p
@@ -100,9 +105,9 @@ ANOVA_paired <- function(m, groups, n.gr){
                                   paste("t.test.paired.adj","(",t.test.pv[3,1],"-",t.test.pv[3,2],")"),
                                   paste("t.test.paired.adj","(",t.test.pv[4,1],"-",t.test.pv[4,2],")"))
     
-    mean.new_A <- mean(subset(data2,cond=="A")$protein)
-    mean.new_B <- mean(subset(data2,cond=="B")$protein)
-    mean.new_C <- mean(subset(data2,cond=="C")$protein)
+    mean.new_A <- mean(data2[data2$cond %in% levels(data2$cond)[1],"protein"])
+    mean.new_B <- mean(data2[data2$cond %in% levels(data2$cond)[2],"protein"])
+    mean.new_C <- mean(data2[data2$cond %in% levels(data2$cond)[3],"protein"])
     
     mean.new[i,1] <-mean.new_A
     mean.new[i,2] <-mean.new_B
