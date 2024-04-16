@@ -149,15 +149,4 @@ plot_roc.fn(Low.test, from.col = 2,
             group.col = "Time_point",
             plots = T)
 
-LT.model <- Low.test$Time_point ~ HPPD_IGBP6+HPPD_ALDOB+IGFBP6_ALDOB+HPPD_IGFBP6_ALDOB
-roc_i.list.LT <- roc(LT.model,percent=T, smooth=F, legacy.axes=F,ci=TRUE, data = Low.test)
-roc_i.list.LT
-
-# Graph Multicurve
-gg.LT<- ggroc(roc_i.list.LT, linetype=1,size = 0.75)+
-  theme_bw()+labs()+ggtitle("Low testosterone")+
-  theme(legend.title = element_blank())+
-  geom_segment(aes(x = 100, xend = 0, y = 0, yend = 100), color="black", linetype="dashed",size = 0.5)
-gg.LT
-
 
