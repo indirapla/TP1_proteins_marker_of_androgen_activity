@@ -118,6 +118,36 @@ plot_roc.fn <- function(matrix,from.col,to.col, group.col, plots=F){
   write.csv(AUC.matrix, "AUC.matrix.csv")
 }
 
+##====Multivariable Logistic regression ===================================================
+library(dplyr)
+
+Big.table <- as.data.frame(readxl::read_excel("..data/Healthy_model_Signif_biomarkers.xlsx")) # Read the file data
+rownames(Big.table) <- Big.table[,1]
+Big.table <- dplyr::select(Big.table, -id)
+
+DATA <- dplyr::select(Big.table, -Patient)|>
+  rename(HPPD = '4HPPD')
+DATA$sample <- row.names(DATA)
+
+#== To build the MMA variable ===
+
+# HPPD + IGBP6
+glm.ht = glm(Time_point ~ HPPD + IGFBP6, data = DATA, family="binomial")
+
+MMA <- as.data.frame(predict(glm.ht, type = "response"))   # save the predicted log-odds (of being low testosterone) for each observation
+colnames(MMA) <- "HPPD_IGBP6"
+MMA$sample <- row.names(MMA)
+
+DATA1 <- plyr::join_all(list(DATA,MMA),by="sample")
+
+#------------
+Low.test <- DATA1[, c("Time_point", "HPPD_IGBP6")]
+
+
+plot_roc.fn(Low.test, from.col = 2, 
+            to.col = ncol(Low.test), 
+            group.col = "Time_point",
+            plots = T)
 
 #===================
 ##====Multivariable Logistic regression ===================================================
