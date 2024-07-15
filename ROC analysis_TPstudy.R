@@ -58,7 +58,7 @@ plot_roc.fn <- function(matrix,from.col,to.col, group.col, plots=F){
                  max.auc.polygon=T, 
                  grid=TRUE,
                  print.auc=TRUE, 
-                 print.thres='best', 
+                 #print.thres='best', 
                  print.thres.best.method='y',   # "closest.topleft", "youden"
                  print.thres.adj=c(-0.7, 1.5),#,c(-0.05, 2.0),c(-0.05, 5.0)),
                  print.thres.pattern="Cut-off: %.2f    \n\n\nSpec: %.1f \nSens: %.1f",
@@ -118,5 +118,81 @@ plot_roc.fn <- function(matrix,from.col,to.col, group.col, plots=F){
   write.csv(AUC.matrix, "AUC.matrix.csv")
 }
 
+
+#===================
+##====Multivariable Logistic regression ===================================================
+library(dplyr)
+
+Big.table <- as.data.frame(readxl::read_excel("C:/Users/yhd5105/Documents/GitHub/TP1_proteins_marker_of_androgen_activity/data/Healthy_model_Signif_biomarkers.xlsx")) # Read the file data
+rownames(Big.table) <- Big.table[,1]
+Big.table <- dplyr::select(Big.table, -id)
+
+DATA <- dplyr::select(Big.table, -Patient)|>
+  rename(HPPD = '4HPPD')
+DATA$sample <- row.names(DATA)
+
+#== To build the MMA variable ===
+
+# HPPD + IGBP6
+glm.ht = glm(Time_point ~ HPPD + IGFBP6, data = DATA, family="binomial")
+
+MMA <- as.data.frame(predict(glm.ht, type = "response"))   # save the predicted log-odds (of being low testosterone) for each observation
+colnames(MMA) <- "HPPD_IGBP6"
+MMA$sample <- row.names(MMA)
+
+
+DATA1 <- plyr::join_all(list(DATA,MMA),by="sample")
+
+#==HPPD + ALDOB
+glm.ht = glm(Time_point ~ HPPD + ALDOB, data = DATA, family="binomial")
+
+MMA <- as.data.frame(predict(glm.ht, type = "response"))   # save the predicted log-odds (of being low testosterone) for each observation
+colnames(MMA) <- "HPPD_ALDOB"
+MMA$sample <- row.names(MMA)
+
+
+DATA1 <- plyr::join_all(list(DATA1,MMA),by="sample")
+
+#==IGBP6 + ALDOB
+glm.ht = glm(Time_point ~ IGFBP6 + ALDOB, data = DATA, family="binomial")
+
+MMA <- as.data.frame(predict(glm.ht, type = "response"))   # save the predicted log-odds (of being low testosterone) for each observation
+colnames(MMA) <- "IGFBP6_ALDOB"
+MMA$sample <- row.names(MMA)
+
+
+DATA1 <- plyr::join_all(list(DATA1,MMA),by="sample")
+
+
+#==HPPD + IGBP6 + ALDOB
+glm.ht = glm(Time_point ~ HPPD + IGFBP6 + ALDOB, data = DATA, family="binomial")
+
+MMA <- as.data.frame(predict(glm.ht, type = "response"))   # save the predicted log-odds (of being low testosterone) for each observation
+colnames(MMA) <- "HPPD_IGFBP6_ALDOB"
+MMA$sample <- row.names(MMA)
+
+
+DATA1 <- plyr::join_all(list(DATA1,MMA),by="sample")
+
+
+#------------
+Low.test <- DATA1[, c("Time_point", "HPPD_IGBP6","HPPD_ALDOB","IGFBP6_ALDOB","HPPD_IGFBP6_ALDOB")]
+
+
+plot_roc.fn(Low.test, from.col = 2, 
+            to.col = ncol(Low.test), 
+            group.col = "Time_point",
+            plots = T)
+
+LT.model <- Low.test$Time_point ~ HPPD_IGBP6+HPPD_ALDOB+IGFBP6_ALDOB+HPPD_IGFBP6_ALDOB
+roc_i.list.LT <- roc(LT.model,percent=T, smooth=F, legacy.axes=F,ci=TRUE, data = Low.test)
+roc_i.list.LT
+
+# Graph Multicurve
+gg.LT<- ggroc(roc_i.list.LT, linetype=1,size = 0.75)+
+  theme_bw()+labs()+ggtitle("Low testosterone")+
+  theme(legend.title = element_blank())+
+  geom_segment(aes(x = 100, xend = 0, y = 0, yend = 100), color="black", linetype="dashed",size = 0.5)
+gg.LT
 
 
